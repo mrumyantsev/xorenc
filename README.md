@@ -23,5 +23,6 @@ make build
 Execute the application with 2 additional parameters:
 
 ```
+cd build
 xore <path/to/file> <any amount of words as encrypt key>
 ```
