@@ -11,7 +11,7 @@ const (
 )
 
 // Make per bit XOR convertation with a key.
-func EncryptBytes(data []byte, key []byte) {
+func EncryptData(data []byte, key []byte) {
 	var (
 		dLen = len(data) // data length
 		kLen = len(key)  // key length
@@ -39,7 +39,7 @@ func EcryptFile(path string, key []byte) error {
 		return wrapError("could not read file", err)
 	}
 
-	EncryptBytes(data, key)
+	EncryptData(data, key)
 
 	err = overwriteFile(path, data)
 	if err != nil {
