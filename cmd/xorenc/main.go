@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	_ERROR_EXIT_CODE = 1
+	_ERROR_EXIT_CODE int = 1
 )
 
 func main() {
@@ -26,11 +26,13 @@ func main() {
 	filePath := args[0]
 	encryptKey := []byte(strings.Join(args[1:], " "))
 
-	err := xorenc.EcryptFile(filePath, encryptKey)
+	nbytes, err := xorenc.EcryptFile(filePath, encryptKey)
 	if err != nil {
 		fmt.Println(err.Error())
 		errorExit()
 	}
+
+	fmt.Println("encrypted", nbytes, "bytes")
 }
 
 func errorExit() {

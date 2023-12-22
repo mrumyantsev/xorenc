@@ -10,13 +10,14 @@ const (
 	_ERROR_INSERT string = ". error: "
 )
 
-// Make per bit XOR convertation by a key.
-func EncryptData(data []byte, key []byte) {
+// Make per bit XOR encryption for every byte by a key.
+// Returns number of encrypted bytes.
+func EncryptData(data []byte, key []byte) int {
 	var (
-		dLen = len(data) // data length
-		kLen = len(key)  // key length
-		i    = 0         // data index
-		j    = 0         // key index
+		dLen int = len(data) // data length
+		kLen int = len(key)  // key length
+		i    int = 0         // data index
+		j    int = 0         // key index
 	)
 
 	for i < dLen {
@@ -29,24 +30,27 @@ func EncryptData(data []byte, key []byte) {
 		i++
 		j++
 	}
+
+	return dLen
 }
 
 // Read a data from file, convert every its bit with XOR by a key, and
 // then replace initial file content with the result.
-func EcryptFile(path string, key []byte) error {
+// Returns number of encrypted bytes and error (if appeared).
+func EcryptFile(path string, key []byte) (int, error) {
 	data, err := readFile(path)
 	if err != nil {
-		return wrapError("could not read file", err)
+		return 0, wrapError("could not read file", err)
 	}
 
-	EncryptData(data, key)
+	nbytes := EncryptData(data, key)
 
 	err = overwriteFile(path, data)
 	if err != nil {
-		return wrapError("could not overwrite file", err)
+		return 0, wrapError("could not overwrite file", err)
 	}
 
-	return nil
+	return nbytes, nil
 }
 
 // Read data from file.
