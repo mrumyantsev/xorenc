@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"os"
 	"strings"
@@ -8,27 +9,30 @@ import (
 	"github.com/mrumyantsev/xorenc"
 )
 
-func main() {
-	argsLength := len(os.Args)
+const (
+	_ERROR_EXIT_CODE = 1
+)
 
-	if argsLength < 3 {
-		printUsageHelp()
-		os.Exit(1)
+func main() {
+	flag.Parse()
+
+	args := flag.Args()
+
+	if len(args) < 2 {
+		fmt.Println("usage: xorenc <path/to/file> <any number of words as an encryption key>")
+		errorExit()
 	}
 
-	filePath := os.Args[1]
+	filePath := args[0]
+	encryptKey := []byte(strings.Join(args[1:], " "))
 
-	encryptKeyWords := os.Args[2:]
-	encryptKeyChars := strings.Join(encryptKeyWords, " ")
-	encryptKeyBytes := []byte(encryptKeyChars)
-
-	err := xorenc.EcryptFile(filePath, encryptKeyBytes)
+	err := xorenc.EcryptFile(filePath, encryptKey)
 	if err != nil {
-		fmt.Println("could not encrypt file. error: " + err.Error())
-		os.Exit(2)
+		fmt.Println(err.Error())
+		errorExit()
 	}
 }
 
-func printUsageHelp() {
-	fmt.Println("usage: xorenc <path/to/file> <any amount of words as encrypt key>")
+func errorExit() {
+	os.Exit(_ERROR_EXIT_CODE)
 }
