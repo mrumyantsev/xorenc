@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/mrumyantsev/xore"
+	"github.com/mrumyantsev/xorenc"
 )
 
 func main() {
@@ -22,7 +22,7 @@ func main() {
 	encryptKeyChars := strings.Join(encryptKeyWords, " ")
 	encryptKeyBytes := []byte(encryptKeyChars)
 
-	err := xore.EcryptFile(filePath, encryptKeyBytes)
+	err := xorenc.EcryptFile(filePath, encryptKeyBytes)
 	if err != nil {
 		fmt.Println("could not encrypt file. error: " + err.Error())
 		os.Exit(2)
@@ -30,5 +30,5 @@ func main() {
 }
 
 func printUsageHelp() {
-	fmt.Println("usage: xore <path/to/file> <any amount of words as encrypt key>")
+	fmt.Println("usage: xorenc <path/to/file> <any amount of words as encrypt key>")
 }

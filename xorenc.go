@@ -1,4 +1,4 @@
-package xore
+package xorenc
 
 import (
 	"errors"

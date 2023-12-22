@@ -1,3 +1,3 @@
-module github.com/mrumyantsev/xore
+module github.com/mrumyantsev/xorenc
 
 go 1.20
