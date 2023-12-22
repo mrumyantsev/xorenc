@@ -37,7 +37,7 @@ func EncryptData(data []byte, key []byte) int {
 // Read a data from file, convert every its bit with XOR by a key, and
 // then replace initial file content with the result.
 // Returns number of encrypted bytes and error (if appeared).
-func EcryptFile(path string, key []byte) (int, error) {
+func EncryptFile(path string, key []byte) (int, error) {
 	data, err := readFile(path)
 	if err != nil {
 		return 0, wrapError("could not read file", err)

@@ -26,7 +26,7 @@ func main() {
 	filePath := args[0]
 	encryptKey := []byte(strings.Join(args[1:], " "))
 
-	nbytes, err := xorenc.EcryptFile(filePath, encryptKey)
+	nbytes, err := xorenc.EncryptFile(filePath, encryptKey)
 	if err != nil {
 		fmt.Println(err.Error())
 		errorExit()
