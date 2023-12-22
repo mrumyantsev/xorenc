@@ -10,7 +10,7 @@ const (
 	_ERROR_INSERT string = ". error: "
 )
 
-// Make per bit XOR convertation with a key.
+// Make per bit XOR convertation by a key.
 func EncryptData(data []byte, key []byte) {
 	var (
 		dLen = len(data) // data length
