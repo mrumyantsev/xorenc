@@ -1,33 +1,16 @@
 package xore
 
 import (
-	"github.com/mrumyantsev/go-fsops"
+	"errors"
+	"io"
+	"os"
 )
 
-// Read a data from file, convert every its bit with XOR by a key, and
-// then replace initial file content with the result.
-func EcryptFile(path string, key []byte) error {
-	var (
-		data []byte
-		err  error
-	)
+const (
+	_ERROR_INSERT string = ". error: "
+)
 
-	data, err = fsops.ReadFile(path)
-	if err != nil {
-		return err
-	}
-
-	EncryptBytes(data, key)
-
-	err = fsops.OverwriteFile(path, data)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// Make per bit convertation with XOR by a key.
+// Make per bit XOR convertation with a key.
 func EncryptBytes(data []byte, key []byte) {
 	var (
 		dLen = len(data) // data length
@@ -46,4 +29,59 @@ func EncryptBytes(data []byte, key []byte) {
 		i++
 		j++
 	}
+}
+
+// Read a data from file, convert every its bit with XOR by a key, and
+// then replace initial file content with the result.
+func EcryptFile(path string, key []byte) error {
+	data, err := readFile(path)
+	if err != nil {
+		return wrapError("could not read file", err)
+	}
+
+	EncryptBytes(data, key)
+
+	err = overwriteFile(path, data)
+	if err != nil {
+		return wrapError("could not overwrite file", err)
+	}
+
+	return nil
+}
+
+// Read data from file.
+func readFile(path string) ([]byte, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+
+	data, err := io.ReadAll(f)
+	if err != nil {
+		return nil, err
+	}
+
+	return data, nil
+}
+
+// Overwrite whole file, if exists, or create new file with the data.
+func overwriteFile(path string, data []byte) error {
+	f, err := os.OpenFile(path, os.O_TRUNC|os.O_WRONLY, 0)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	_, err = f.Write(data)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// Wrap error with a description.
+func wrapError(desc string, err error) error {
+	return errors.New(desc + _ERROR_INSERT + err.Error())
 }
