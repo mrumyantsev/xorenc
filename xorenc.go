@@ -54,6 +54,7 @@ func EncryptFile(path string, key []byte) (int, error) {
 }
 
 // Read data from file.
+// Returns file data and error (if appeared).
 func readFile(path string) ([]byte, error) {
 	f, err := os.Open(path)
 	if err != nil {
@@ -70,6 +71,7 @@ func readFile(path string) ([]byte, error) {
 }
 
 // Overwrite whole file, if exists, or create new file with the data.
+// Returns error (if appeared).
 func overwriteFile(path string, data []byte) error {
 	f, err := os.OpenFile(path, os.O_TRUNC|os.O_WRONLY, 0)
 	if err != nil {
@@ -86,6 +88,7 @@ func overwriteFile(path string, data []byte) error {
 }
 
 // Wrap error with a description.
+// Returns new error with extended description.
 func wrapError(desc string, err error) error {
 	return errors.New(desc + _ERROR_INSERT + err.Error())
 }
