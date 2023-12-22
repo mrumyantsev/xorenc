@@ -14,5 +14,5 @@ Execute the application with 2 additional parameters:
 
 ```
 cd build
-xorenc <path/to/file> <any amount of words as encrypt key>
+usage: xorenc <path/to/file> <any number of words as an encryption key>
 ```
