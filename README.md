@@ -1,6 +1,6 @@
 # Xcrypter
 
-This CLI application encrypts and decrypts files within file system. And it can be imported as Go library. It uses the same encrypt key to decrypt the file that was encrypted. **Warning**: Always remember the key you using to encrypt files. Losing the key can cause permanent loss of data.
+This CLI application encrypts/decrypts files within file system by XOR per bit converting. Also it is a Go library, so it is able to import converting functions from other applications. It uses the same encrypt key to decrypt the file that was encrypted. **Warning**: Always remember the key you using to encrypt files. Losing the key can cause permanent loss of data.
 
 # Usage
 
