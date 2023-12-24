@@ -1,4 +1,4 @@
-package xorenc
+package xcrypter
 
 import (
 	"errors"

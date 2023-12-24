@@ -1,3 +1,3 @@
-module github.com/mrumyantsev/xorenc
+module github.com/mrumyantsev/xcrypter
 
 go 1.20
