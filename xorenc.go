@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	_ERROR_INSERT string = ". error: "
+	errorInsert string = ". error: "
 )
 
 // Make per bit XOR encryption for every byte by a key.
@@ -90,5 +90,5 @@ func overwriteFile(path string, data []byte) error {
 // Wrap error with a description.
 // Returns new error with extended description.
 func wrapError(desc string, err error) error {
-	return errors.New(desc + _ERROR_INSERT + err.Error())
+	return errors.New(desc + errorInsert + err.Error())
 }
