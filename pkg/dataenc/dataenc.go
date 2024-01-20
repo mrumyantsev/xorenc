@@ -1,8 +1,12 @@
 package dataenc
 
+// A DataEnc structure is responsible for encryption of data in terms of
+// XOR data conversion.
 type DataEnc struct {
 }
 
+// New creates a new DataEnc instance.
+// Returns a pointer to DataEnc struct in heap.
 func New() *DataEnc {
 	return &DataEnc{}
 }

@@ -16,10 +16,14 @@ const (
 	errorWriteFile          = "could not write to file"
 )
 
+// A FileEnc structure is responsible for encryption of files in terms
+// of XOR data conversion.
 type FileEnc struct {
 	dataEnc *dataenc.DataEnc
 }
 
+// New creates a new FileEnc instance.
+// Returns a pointer to FileEnc struct in heap.
 func New(dataEnc *dataenc.DataEnc) *FileEnc {
 	return &FileEnc{dataEnc: dataEnc}
 }
