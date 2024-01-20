@@ -7,8 +7,9 @@ func New() *DataEnc {
 	return &DataEnc{}
 }
 
-// Encrypt performs per-bit XOR data encryption by the key.
-// Returns the number of encrypted bytes.
+// Encrypt performs per-bit XOR encryption of data by the key. The same
+// key must be used for the decryption.
+// Returns the number of the encrypted bytes.
 func (e *DataEnc) Encrypt(data []byte, key []byte) (nBytes int) {
 	var (
 		dLen int = len(data) // data length
