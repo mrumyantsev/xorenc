@@ -25,7 +25,9 @@ func New(dataEnc *dataenc.DataEnc) *FileEnc {
 }
 
 // Encrypt performs per-bit XOR encryption of file, specified in path,
-// by the key. The same key must be used for the decryption.
+// by the key.
+// The decryption is provided by repeating of encryption with the same
+// key, that was in use in encryption.
 // Returns the number of the encrypted bytes and the error with its
 // description.
 func (e *FileEnc) Encrypt(path string, key []byte) (nBytes int, err error) {
