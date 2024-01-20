@@ -1,8 +1,15 @@
-package encryptor
+package dataenc
 
-// Make per bit XOR encryption for every byte by a key.
-// Returns number of encrypted bytes.
-func EncryptData(data []byte, key []byte) int {
+type DataEnc struct {
+}
+
+func New() *DataEnc {
+	return &DataEnc{}
+}
+
+// Encrypt performs per-bit XOR data encryption by the key.
+// Returns the number of encrypted bytes.
+func (e *DataEnc) Encrypt(data []byte, key []byte) (nBytes int) {
 	var (
 		dLen int = len(data) // data length
 		kLen int = len(key)  // key length

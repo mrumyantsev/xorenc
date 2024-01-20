@@ -6,7 +6,8 @@ import (
 	"os"
 	"strings"
 
-	fileops "github.com/mrumyantsev/xor/internal/pkg/file-ops"
+	"github.com/mrumyantsev/xor/internal/pkg/encrypters"
+	"github.com/mrumyantsev/xor/pkg/dataenc"
 )
 
 const (
@@ -14,10 +15,15 @@ const (
 )
 
 type Xor struct {
+	encrypters *encrypters.Encrypters
 }
 
 func New() *Xor {
-	return &Xor{}
+	dataEnc := dataenc.New()
+
+	encrypters := encrypters.New(dataEnc)
+
+	return &Xor{encrypters: encrypters}
 }
 
 func (x *Xor) Run() {
@@ -33,7 +39,7 @@ func (x *Xor) Run() {
 	filePath := args[0]
 	encryptKey := []byte(strings.Join(args[1:], " "))
 
-	nbytes, err := fileops.EncryptFile(filePath, encryptKey)
+	nbytes, err := x.encrypters.FileEncrypter.Encrypt(filePath, encryptKey)
 	if err != nil {
 		fmt.Println(err.Error())
 		errorExit()

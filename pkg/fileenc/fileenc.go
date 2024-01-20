@@ -1,11 +1,11 @@
-package fileops
+package fileenc
 
 import (
 	"io"
 	"os"
 
 	"github.com/mrumyantsev/xor/internal/pkg/lib"
-	"github.com/mrumyantsev/xor/pkg/encryptor"
+	"github.com/mrumyantsev/xor/pkg/dataenc"
 )
 
 const (
@@ -16,24 +16,32 @@ const (
 	errorWriteFile          = "could not write to file"
 )
 
+type FileEnc struct {
+	dataEnc *dataenc.DataEnc
+}
+
+func New(dataEnc *dataenc.DataEnc) *FileEnc {
+	return &FileEnc{dataEnc: dataEnc}
+}
+
 // EncryptFile performs per-bit XOR data encryption by the key with the
 // file by its path. The same key must be used for the decryption.
 // Returns the number of the encrypted bytes and the error with its
 // description.
-func EncryptFile(path string, key []byte) (int, error) {
+func (e *FileEnc) Encrypt(path string, key []byte) (nBytes int, err error) {
 	data, err := readFile(path)
 	if err != nil {
 		return 0, lib.DecorateError(errorExecReadingSeq, err)
 	}
 
-	nbytes := encryptor.EncryptData(data, key)
+	nBytes = e.dataEnc.Encrypt(data, key)
 
 	err = overwriteFile(path, data)
 	if err != nil {
 		return 0, lib.DecorateError(errorExecOverwritingSeq, err)
 	}
 
-	return nbytes, nil
+	return nBytes, nil
 }
 
 // readFile reads the data from a file by its path.
