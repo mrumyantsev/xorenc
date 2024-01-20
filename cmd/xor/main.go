@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	_ERROR_EXIT_CODE int = 1
+	errorExitCode int = 1
 )
 
 func main() {
@@ -36,5 +36,5 @@ func main() {
 }
 
 func errorExit() {
-	os.Exit(_ERROR_EXIT_CODE)
+	os.Exit(errorExitCode)
 }
