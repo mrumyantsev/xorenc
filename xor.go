@@ -40,14 +40,14 @@ func EncryptData(data []byte, key []byte) int {
 func EncryptFile(path string, key []byte) (int, error) {
 	data, err := readFile(path)
 	if err != nil {
-		return 0, wrapError("could not read file", err)
+		return 0, decorateError("could not read file", err)
 	}
 
 	nbytes := EncryptData(data, key)
 
 	err = overwriteFile(path, data)
 	if err != nil {
-		return 0, wrapError("could not overwrite file", err)
+		return 0, decorateError("could not overwrite file", err)
 	}
 
 	return nbytes, nil
@@ -89,6 +89,6 @@ func overwriteFile(path string, data []byte) error {
 
 // Wrap error with a description.
 // Returns new error with extended description.
-func wrapError(desc string, err error) error {
+func decorateError(desc string, err error) error {
 	return errors.New(desc + errorInsert + err.Error())
 }
