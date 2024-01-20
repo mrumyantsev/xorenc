@@ -1,3 +1,3 @@
 .PHONY: build
 build:
-	@go build -o ./build/xcrypter ./cmd/xcrypter/main.go
+	@go build -o ./build/xor ./cmd/xor/main.go

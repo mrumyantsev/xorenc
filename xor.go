@@ -1,4 +1,4 @@
-package xcrypter
+package xor
 
 import (
 	"errors"

@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/mrumyantsev/xcrypter"
+	"github.com/mrumyantsev/xor"
 )
 
 const (
@@ -19,14 +19,14 @@ func main() {
 	args := flag.Args()
 
 	if len(args) < 2 {
-		fmt.Println("usage: xcrypter <path/to/file> <any number of words as an encryption key>")
+		fmt.Println("usage: xor <path/to/file> <any number of words as an encryption key>")
 		errorExit()
 	}
 
 	filePath := args[0]
 	encryptKey := []byte(strings.Join(args[1:], " "))
 
-	nbytes, err := xcrypter.EncryptFile(filePath, encryptKey)
+	nbytes, err := xor.EncryptFile(filePath, encryptKey)
 	if err != nil {
 		fmt.Println(err.Error())
 		errorExit()
