@@ -1,4 +1,4 @@
-package xor
+package encryptor
 
 // Make per bit XOR encryption for every byte by a key.
 // Returns number of encrypted bytes.

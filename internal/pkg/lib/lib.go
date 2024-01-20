@@ -1,4 +1,4 @@
-package xor
+package lib
 
 import "errors"
 
@@ -10,6 +10,6 @@ const (
 // ". error: " text in between. If the error is nil, is cause panic.
 // Returns the new error, which text is decorated by the specified
 // description.
-func decorateError(desc string, err error) error {
+func DecorateError(desc string, err error) error {
 	return errors.New(desc + errorInsert + err.Error())
 }

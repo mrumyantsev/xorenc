@@ -1,8 +1,11 @@
-package xor
+package fileops
 
 import (
 	"io"
 	"os"
+
+	"github.com/mrumyantsev/xor/internal/pkg/lib"
+	"github.com/mrumyantsev/xor/pkg/encryptor"
 )
 
 const (
@@ -20,14 +23,14 @@ const (
 func EncryptFile(path string, key []byte) (int, error) {
 	data, err := readFile(path)
 	if err != nil {
-		return 0, decorateError(errorExecReadingSeq, err)
+		return 0, lib.DecorateError(errorExecReadingSeq, err)
 	}
 
-	nbytes := EncryptData(data, key)
+	nbytes := encryptor.EncryptData(data, key)
 
 	err = overwriteFile(path, data)
 	if err != nil {
-		return 0, decorateError(errorExecOverwritingSeq, err)
+		return 0, lib.DecorateError(errorExecOverwritingSeq, err)
 	}
 
 	return nbytes, nil
@@ -38,13 +41,13 @@ func EncryptFile(path string, key []byte) (int, error) {
 func readFile(path string) ([]byte, error) {
 	f, err := os.Open(path)
 	if err != nil {
-		return nil, decorateError(errorOpenFile, err)
+		return nil, lib.DecorateError(errorOpenFile, err)
 	}
 	defer f.Close()
 
 	data, err := io.ReadAll(f)
 	if err != nil {
-		return nil, decorateError(errorReadFile, err)
+		return nil, lib.DecorateError(errorReadFile, err)
 	}
 
 	return data, nil
@@ -56,13 +59,13 @@ func readFile(path string) ([]byte, error) {
 func overwriteFile(path string, data []byte) error {
 	f, err := os.OpenFile(path, os.O_TRUNC|os.O_WRONLY, 0)
 	if err != nil {
-		return decorateError(errorOpenFile, err)
+		return lib.DecorateError(errorOpenFile, err)
 	}
 	defer f.Close()
 
 	_, err = f.Write(data)
 	if err != nil {
-		return decorateError(errorWriteFile, err)
+		return lib.DecorateError(errorWriteFile, err)
 	}
 
 	return nil
