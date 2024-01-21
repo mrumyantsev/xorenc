@@ -6,11 +6,11 @@ import (
 )
 
 type DataEncrypter interface {
-	Encrypt(data []byte, key []byte) (nBytes int)
+	Encrypt(data []byte, key []byte, nWorkers int) (nBytes int)
 }
 
 type FileEncrypter interface {
-	Encrypt(path string, key []byte) (nBytes int, err error)
+	Encrypt(path string, key []byte, nWorkers int) (nBytes int, err error)
 }
 
 type Encrypters struct {

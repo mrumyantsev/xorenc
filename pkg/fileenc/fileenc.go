@@ -30,17 +30,24 @@ func New(dataEnc *dataenc.DataEnc) *FileEnc {
 
 // Encrypt performs per-bit XOR encryption of file, specified in path,
 // by the key.
+//
 // The decryption is provided by repeating of encryption with the same
 // key, that was in use in encryption.
+//
+// The data processing operation in this function is processed with the
+// workers, which divides the data to the equal pieces and encrypts
+// each. The number of workers is capped to the length of the data, and
+// it makes no processing, if given 0 or less.
+//
 // Returns the number of the encrypted bytes and the error with its
 // description.
-func (e *FileEnc) Encrypt(path string, key []byte) (nBytes int, err error) {
+func (e *FileEnc) Encrypt(path string, key []byte, nWorkers int) (nBytes int, err error) {
 	data, err := readFile(path)
 	if err != nil {
 		return 0, lib.DecorateError(errorExecReadingSeq, err)
 	}
 
-	nBytes = e.dataEnc.Encrypt(data, key)
+	nBytes = e.dataEnc.Encrypt(data, key, nWorkers)
 
 	err = overwriteFile(path, data)
 	if err != nil {

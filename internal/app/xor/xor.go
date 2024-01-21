@@ -4,15 +4,14 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"runtime"
 	"strings"
 
 	"github.com/mrumyantsev/xor/internal/pkg/encrypters"
 	"github.com/mrumyantsev/xor/pkg/dataenc"
 )
 
-const (
-	errorExitCode int = 1
-)
+const errorExitCode int = 1
 
 type Xor struct {
 	encrypters *encrypters.Encrypters
@@ -29,23 +28,28 @@ func New() *Xor {
 func (x *Xor) Run() {
 	flag.Parse()
 
-	args := flag.Args()
+	var args []string = flag.Args()
 
 	if len(args) < 2 {
 		fmt.Println("usage: xor <path/to/file> <any number of words as an encryption key>")
 		errorExit()
 	}
 
-	filePath := args[0]
-	encryptKey := []byte(strings.Join(args[1:], " "))
+	var (
+		filePath   string = args[0]
+		encryptKey []byte = []byte(strings.Join(args[1:], " "))
+		nCores     int    = runtime.NumCPU()
+		nBytes     int    = 0
+		err        error  = nil
+	)
 
-	nbytes, err := x.encrypters.FileEncrypter.Encrypt(filePath, encryptKey)
+	nBytes, err = x.encrypters.FileEncrypter.Encrypt(filePath, encryptKey, nCores)
 	if err != nil {
 		fmt.Println(err.Error())
 		errorExit()
 	}
 
-	fmt.Println("encrypted", nbytes, "bytes")
+	fmt.Println("encrypted", nBytes, "bytes")
 }
 
 func errorExit() {
