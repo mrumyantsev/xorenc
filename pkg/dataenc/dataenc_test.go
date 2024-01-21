@@ -6,34 +6,50 @@ import (
 	"testing"
 )
 
-func TestEncrypt(t *testing.T) {
-	defaultData := []byte("1n@kjnd lk#j34 h2@bg$7 6hb%3kjb&d8s d?8 a9s#dy#97")
+const aplhaLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 
-	testTable := []struct {
+func TestEncrypt(t *testing.T) {
+	dataDefault := []byte(aplhaLetters)
+
+	keysTestTable := []struct {
 		key []byte
 	}{
-		{key: []byte(" ")},
-		{key: []byte("1111")},
-		{key: []byte("v2@sV5n#^q4Z#i$g7x")},
+		{[]byte(" ")},
+		{[]byte("abc")},
+		{[]byte("1234")},
+		{[]byte("v2@sV5n#^q4Z#i$g7x")},
+		{[]byte(aplhaLetters)},
+	}
+
+	workersTestTable := []struct {
+		encWNum int
+		decWNum int
+	}{
+		{1, 2},
+		{4, 5},
+		{7, 4},
+		{9, 5},
+		{13, 12},
+		{10_000, 100_000},
 	}
 
 	dataEnc := New()
-	dataCopy := make([]byte, len(defaultData))
-	var isDataMatch bool
+	dataCopy := make([]byte, len(dataDefault))
 
-	for _, entry := range testTable {
-		copy(dataCopy, defaultData)
+	for _, keyEntry := range keysTestTable {
+		for _, wnEntry := range workersTestTable {
+			copy(dataCopy, dataDefault)
 
-		dataEnc.Encrypt(dataCopy, entry.key) // encryption
-		dataEnc.Encrypt(dataCopy, entry.key) // decryption
+			// encryption + decryption should bring default data
+			dataEnc.Encrypt(dataCopy, keyEntry.key, wnEntry.encWNum)
+			dataEnc.Encrypt(dataCopy, keyEntry.key, wnEntry.decWNum)
 
-		isDataMatch = reflect.DeepEqual(dataCopy, defaultData)
-
-		if !isDataMatch {
-			fmt.Println("decryption fail: default data does not match data copy")
-			fmt.Println("def", defaultData)
-			fmt.Println("cpy", dataCopy)
-			t.FailNow()
+			if !reflect.DeepEqual(dataCopy, dataDefault) {
+				fmt.Println("decryption fail: default data does not match data copy")
+				fmt.Println("def:", dataDefault)
+				fmt.Println("cpy:", dataCopy)
+				t.FailNow()
+			}
 		}
 	}
 }
