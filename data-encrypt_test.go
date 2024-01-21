@@ -1,9 +1,11 @@
-package xor
+package xor_test
 
 import (
 	"fmt"
 	"reflect"
 	"testing"
+
+	"github.com/mrumyantsev/xor"
 )
 
 const aplhaLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
@@ -40,8 +42,8 @@ func TestEncrypt(t *testing.T) {
 			copy(dataCopy, dataDefault)
 
 			// encryption + decryption should bring default data
-			EncryptData(dataCopy, keyEntry.key, wnEntry.encWNum)
-			EncryptData(dataCopy, keyEntry.key, wnEntry.decWNum)
+			xor.EncryptData(dataCopy, keyEntry.key, wnEntry.encWNum)
+			xor.EncryptData(dataCopy, keyEntry.key, wnEntry.decWNum)
 
 			if !reflect.DeepEqual(dataCopy, dataDefault) {
 				fmt.Println("decryption fail: default data does not match data copy")
