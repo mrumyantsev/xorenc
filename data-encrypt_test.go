@@ -1,4 +1,4 @@
-package dataenc
+package xor
 
 import (
 	"fmt"
@@ -33,7 +33,6 @@ func TestEncrypt(t *testing.T) {
 		{10_000, 100_000},
 	}
 
-	dataEnc := New()
 	dataCopy := make([]byte, len(dataDefault))
 
 	for _, keyEntry := range keysTestTable {
@@ -41,8 +40,8 @@ func TestEncrypt(t *testing.T) {
 			copy(dataCopy, dataDefault)
 
 			// encryption + decryption should bring default data
-			dataEnc.Encrypt(dataCopy, keyEntry.key, wnEntry.encWNum)
-			dataEnc.Encrypt(dataCopy, keyEntry.key, wnEntry.decWNum)
+			EncryptData(dataCopy, keyEntry.key, wnEntry.encWNum)
+			EncryptData(dataCopy, keyEntry.key, wnEntry.decWNum)
 
 			if !reflect.DeepEqual(dataCopy, dataDefault) {
 				fmt.Println("decryption fail: default data does not match data copy")

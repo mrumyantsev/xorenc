@@ -1,17 +1,6 @@
-package dataenc
+package xor
 
 import "sync"
-
-// A DataEnc structure is responsible for encryption of data in terms of
-// XOR data conversion.
-type DataEnc struct {
-}
-
-// New creates a new DataEnc instance.
-// Returns a pointer to DataEnc struct in heap.
-func New() *DataEnc {
-	return &DataEnc{}
-}
 
 // Encrypt performs per-bit XOR encryption of data by the key.
 //
@@ -24,7 +13,7 @@ func New() *DataEnc {
 // it makes no processing, if given 0 or less.
 //
 // Returns the number of the encrypted bytes.
-func (e *DataEnc) Encrypt(data []byte, key []byte, nWorkers int) (nBytes int) {
+func EncryptData(data []byte, key []byte, nWorkers int) (nBytes int) {
 	if nWorkers <= 0 {
 		return 0
 	}

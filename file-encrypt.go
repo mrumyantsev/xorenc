@@ -1,11 +1,8 @@
-package fileenc
+package xor
 
 import (
 	"io"
 	"os"
-
-	"github.com/mrumyantsev/xor/internal/pkg/lib"
-	"github.com/mrumyantsev/xor/pkg/dataenc"
 )
 
 const (
@@ -15,18 +12,6 @@ const (
 	errorReadFile           = "could not read from file"
 	errorWriteFile          = "could not write to file"
 )
-
-// A FileEnc structure is responsible for encryption of files in terms
-// of XOR data conversion.
-type FileEnc struct {
-	dataEnc *dataenc.DataEnc
-}
-
-// New creates a new FileEnc instance.
-// Returns a pointer to FileEnc struct in heap.
-func New(dataEnc *dataenc.DataEnc) *FileEnc {
-	return &FileEnc{dataEnc: dataEnc}
-}
 
 // Encrypt performs per-bit XOR encryption of file, specified in path,
 // by the key.
@@ -41,17 +26,17 @@ func New(dataEnc *dataenc.DataEnc) *FileEnc {
 //
 // Returns the number of the encrypted bytes and the error with its
 // description.
-func (e *FileEnc) Encrypt(path string, key []byte, nWorkers int) (nBytes int, err error) {
+func EncryptFile(path string, key []byte, nWorkers int) (nBytes int, err error) {
 	data, err := readFile(path)
 	if err != nil {
-		return 0, lib.DecorateError(errorExecReadingSeq, err)
+		return 0, decorateError(errorExecReadingSeq, err)
 	}
 
-	nBytes = e.dataEnc.Encrypt(data, key, nWorkers)
+	nBytes = EncryptData(data, key, nWorkers)
 
 	err = overwriteFile(path, data)
 	if err != nil {
-		return 0, lib.DecorateError(errorExecOverwritingSeq, err)
+		return 0, decorateError(errorExecOverwritingSeq, err)
 	}
 
 	return nBytes, nil
@@ -62,13 +47,13 @@ func (e *FileEnc) Encrypt(path string, key []byte, nWorkers int) (nBytes int, er
 func readFile(path string) ([]byte, error) {
 	f, err := os.Open(path)
 	if err != nil {
-		return nil, lib.DecorateError(errorOpenFile, err)
+		return nil, decorateError(errorOpenFile, err)
 	}
 	defer f.Close()
 
 	data, err := io.ReadAll(f)
 	if err != nil {
-		return nil, lib.DecorateError(errorReadFile, err)
+		return nil, decorateError(errorReadFile, err)
 	}
 
 	return data, nil
@@ -80,13 +65,13 @@ func readFile(path string) ([]byte, error) {
 func overwriteFile(path string, data []byte) error {
 	f, err := os.OpenFile(path, os.O_TRUNC|os.O_WRONLY, 0)
 	if err != nil {
-		return lib.DecorateError(errorOpenFile, err)
+		return decorateError(errorOpenFile, err)
 	}
 	defer f.Close()
 
 	_, err = f.Write(data)
 	if err != nil {
-		return lib.DecorateError(errorWriteFile, err)
+		return decorateError(errorWriteFile, err)
 	}
 
 	return nil
