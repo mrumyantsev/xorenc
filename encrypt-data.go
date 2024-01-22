@@ -5,7 +5,7 @@ import "sync"
 // Encrypt performs per-bit XOR encryption of data by the key.
 //
 // The decryption is provided by repeating of encryption with the same
-// key, that was in use in encryption.
+// key, that was used for encryption.
 //
 // The data processing operation in this function is processed with the
 // workers, which divides the data to the equal pieces and encrypts
