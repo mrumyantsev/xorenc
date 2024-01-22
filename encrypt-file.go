@@ -13,8 +13,8 @@ const (
 	errWriteFile          = "could not write to file"
 )
 
-// Encrypt performs per-bit XOR encryption of file, specified in path,
-// by the key.
+// EncryptFile performs per-bit XOR encryption of file, specified in
+// path, by the key.
 //
 // The decryption is provided by repeating of encryption with the same
 // key, that was in use in encryption.
