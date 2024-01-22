@@ -13,33 +13,38 @@ import "sync"
 // it makes no processing, if given 0 or less.
 //
 // Returns the number of the encrypted bytes.
-func EncryptData(data []byte, key []byte, nWorkers int) (nBytes int) {
-	if nWorkers <= 0 {
-		return 0
+func Encrypt(data []byte, key []byte, nWorkers int) {
+	if (data == nil) || (key == nil) || (nWorkers <= 0) {
+		return
 	}
 
-	var dataLen int = len(data)
+	var (
+		dataLen int = len(data)
+		keyLen  int = len(key)
+	)
+
+	if (dataLen == 0) || (keyLen == 0) {
+		return
+	}
 
 	if nWorkers > dataLen {
 		nWorkers = dataLen
 	}
 
 	var (
-		keyLen    int = len(key)
 		dataPart  int = dataLen / nWorkers
 		dataStart int = 0
 		dataEnd   int = dataPart
 		keyStart  int = 0
+		i         int = 1 // loop counter
 
 		wg sync.WaitGroup = sync.WaitGroup{}
 	)
 
 	wg.Add(nWorkers)
 
-	for i := int(0); i < nWorkers; i++ {
-		if i == (nWorkers - 1) {
-			dataEnd = dataLen
-		}
+	for {
+		// starting current worker
 
 		go worker(workerData{
 			data:      data,
@@ -50,18 +55,29 @@ func EncryptData(data []byte, key []byte, nWorkers int) (nBytes int) {
 			wg:        &wg,
 		})
 
+		if i == nWorkers {
+			break
+		}
+
+		i++
+
+		// calculating next worker data
+
 		dataStart += dataPart
-		dataEnd += dataPart
 		keyStart += dataPart
 
 		for keyStart >= keyLen {
 			keyStart -= keyLen
 		}
+
+		if i == nWorkers {
+			dataEnd = dataLen
+		} else {
+			dataEnd += dataPart
+		}
 	}
 
 	wg.Wait()
-
-	return dataLen
 }
 
 func worker(wd workerData) {

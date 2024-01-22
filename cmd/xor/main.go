@@ -65,7 +65,7 @@ func main() {
 			reportError("could not read data from stdin", err)
 		}
 
-		xor.EncryptData(stdinData, encryptKey, nCores)
+		xor.Encrypt(stdinData, encryptKey, nCores)
 
 		_, err = os.Stdout.Write(stdinData)
 		if err != nil {

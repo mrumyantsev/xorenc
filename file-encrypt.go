@@ -32,14 +32,14 @@ func EncryptFile(path string, key []byte, nWorkers int) (nBytes int, err error) 
 		return 0, decorateError(errorExecReadingSeq, err)
 	}
 
-	nBytes = EncryptData(data, key, nWorkers)
+	Encrypt(data, key, nWorkers)
 
 	err = overwriteFile(path, data)
 	if err != nil {
 		return 0, decorateError(errorExecOverwritingSeq, err)
 	}
 
-	return nBytes, nil
+	return len(data), nil
 }
 
 // readFile reads the data from a file by its path.
