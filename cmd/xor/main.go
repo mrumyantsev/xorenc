@@ -21,7 +21,7 @@ const (
 		"  - xor <enckey> < ./def_file > ./out_file\n\n" +
 		"The encryption key (<enckey>) may contain spaces.\n\n" +
 		"The decryption is provided by repeating of encryption\n" +
-		"with the same key, that was in use in encryption."
+		"with the same key, that was used for encryption."
 	space string = " "
 	eol   string = "\n"
 )
