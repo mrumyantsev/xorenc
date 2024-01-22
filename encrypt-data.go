@@ -11,8 +11,6 @@ import "sync"
 // workers, which divides the data to the equal pieces and encrypts
 // each. The number of workers is capped to the length of the data, and
 // it makes no processing, if given 0 or less.
-//
-// Returns the number of the encrypted bytes.
 func Encrypt(data []byte, key []byte, nWorkers int) {
 	if (data == nil) || (key == nil) || (nWorkers <= 0) {
 		return
