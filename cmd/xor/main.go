@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/mrumyantsev/xor"
+	"github.com/mrumyantsev/xor/pkg/xor"
 )
 
 const (
