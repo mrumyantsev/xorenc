@@ -20,7 +20,7 @@ func ReadFile(path string) ([]byte, error) {
 	if err != nil {
 		return nil, e.Wrap(errOpenFile, err)
 	}
-	defer f.Close()
+	defer func() { _ = f.Close() }()
 
 	data, err := io.ReadAll(f)
 	if err != nil {
@@ -38,7 +38,7 @@ func OverwriteFile(path string, data []byte) error {
 	if err != nil {
 		return e.Wrap(errOpenFile, err)
 	}
-	defer f.Close()
+	defer func() { _ = f.Close() }()
 
 	_, err = f.Write(data)
 	if err != nil {
