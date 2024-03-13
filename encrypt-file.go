@@ -3,6 +3,8 @@ package xor
 import (
 	"io"
 	"os"
+
+	"github.com/mrumyantsev/xor/pkg/lib/e"
 )
 
 const (
@@ -29,14 +31,14 @@ const (
 func EncryptFile(path string, key []byte, nWorkers int) (nBytes int, err error) {
 	data, err := readFile(path)
 	if err != nil {
-		return 0, wrapError(errExecReadingSeq, err)
+		return 0, e.Wrap(errExecReadingSeq, err)
 	}
 
 	Encrypt(data, key, nWorkers)
 
 	err = overwriteFile(path, data)
 	if err != nil {
-		return 0, wrapError(errExecOverwritingSeq, err)
+		return 0, e.Wrap(errExecOverwritingSeq, err)
 	}
 
 	return len(data), nil
@@ -47,13 +49,13 @@ func EncryptFile(path string, key []byte, nWorkers int) (nBytes int, err error) 
 func readFile(path string) ([]byte, error) {
 	f, err := os.Open(path)
 	if err != nil {
-		return nil, wrapError(errOpenFile, err)
+		return nil, e.Wrap(errOpenFile, err)
 	}
 	defer f.Close()
 
 	data, err := io.ReadAll(f)
 	if err != nil {
-		return nil, wrapError(errReadFile, err)
+		return nil, e.Wrap(errReadFile, err)
 	}
 
 	return data, nil
@@ -65,13 +67,13 @@ func readFile(path string) ([]byte, error) {
 func overwriteFile(path string, data []byte) error {
 	f, err := os.OpenFile(path, os.O_TRUNC|os.O_WRONLY, 0)
 	if err != nil {
-		return wrapError(errOpenFile, err)
+		return e.Wrap(errOpenFile, err)
 	}
 	defer f.Close()
 
 	_, err = f.Write(data)
 	if err != nil {
-		return wrapError(errWriteFile, err)
+		return e.Wrap(errWriteFile, err)
 	}
 
 	return nil
