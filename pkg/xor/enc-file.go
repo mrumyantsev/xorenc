@@ -6,8 +6,8 @@ import (
 )
 
 const (
-	errExecReadingSeq     = "could not execute reading sequence"
-	errExecOverwritingSeq = "could not execute overwriting sequence"
+	errCompleteFileReading     = "could not complete file reading"
+	errCompleteFileOverwriting = "could not complete file overwriting"
 )
 
 // EncryptFile performs per-bit XOR encryption of file, specified in
@@ -26,14 +26,14 @@ const (
 func EncryptFile(path string, key []byte, nWorkers int) (nBytes int, err error) {
 	data, err := fileops.ReadFile(path)
 	if err != nil {
-		return 0, e.Wrap(errExecReadingSeq, err)
+		return 0, e.Wrap(errCompleteFileReading, err)
 	}
 
 	Encrypt(data, key, nWorkers)
 
 	err = fileops.OverwriteFile(path, data)
 	if err != nil {
-		return 0, e.Wrap(errExecOverwritingSeq, err)
+		return 0, e.Wrap(errCompleteFileOverwriting, err)
 	}
 
 	return len(data), nil
