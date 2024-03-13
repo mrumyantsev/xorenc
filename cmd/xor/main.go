@@ -9,12 +9,12 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/mrumyantsev/xor/pkg/lib/e"
 	"github.com/mrumyantsev/xor/pkg/xor"
 )
 
 const (
 	errorExitCode int    = 1
-	errorInsert   string = ". error: "
 	appMark       string = "xor: "
 	usageInfo     string = "Usage:\n  - xor <filepath> <enckey>\n" +
 		"  - cat ./def_file | xor <enckey> > ./out_file\n" +
@@ -41,7 +41,9 @@ func init() {
 
 	stdinFileInfo, err = os.Stdin.Stat()
 	if err != nil {
-		reportError("could not get stdin file info", err)
+		printError("could not get stdin file info", err)
+
+		os.Exit(errorExitCode)
 	}
 
 	stdinFileMode = stdinFileInfo.Mode()
@@ -52,7 +54,9 @@ func main() {
 
 	if (stdinFileMode & os.ModeCharDevice) == 0 {
 		if len(flagArgs) < 1 {
-			reportWrongUsage("encryption key parameter does not presents")
+			printUsage("encryption key parameter does not presents")
+
+			os.Exit(errorExitCode)
 		}
 
 		var (
@@ -62,14 +66,18 @@ func main() {
 
 		stdinData, err = io.ReadAll(os.Stdin)
 		if err != nil {
-			reportError("could not read data from stdin", err)
+			printError("could not read data from stdin", err)
+
+			os.Exit(errorExitCode)
 		}
 
 		xor.Encrypt(stdinData, encryptKey, nCores)
 
 		_, err = os.Stdout.Write(stdinData)
 		if err != nil {
-			reportError("could not write encrypted data to stdout", err)
+			printError("could not write encrypted data to stdout", err)
+
+			os.Exit(errorExitCode)
 		}
 
 		return
@@ -78,31 +86,37 @@ func main() {
 	// Encrypt the file, given in file path parameter.
 
 	if len(flagArgs) < 2 {
-		reportWrongUsage("file path or encryption key is missing " +
+		printUsage("file path or encryption key is missing " +
 			"in parameters")
+
+		os.Exit(errorExitCode)
 	}
 
 	var (
 		filePath   string = flagArgs[0]
 		encryptKey []byte = []byte(strings.Join(flagArgs[1:], space))
-		nBytes     int
+		encBytes   int
 	)
 
-	nBytes, err = xor.EncryptFile(filePath, encryptKey, nCores)
+	encBytes, err = xor.EncryptFile(filePath, encryptKey, nCores)
 	if err != nil {
-		reportError("could not encrypt file", err)
+		printError("could not encrypt file", err)
+
+		os.Exit(errorExitCode)
 	}
 
-	os.Stdout.WriteString(strconv.Itoa(nBytes) + " bytes encrypted" + eol)
+	printDone(encBytes)
 }
 
-func reportError(desc string, err error) {
-	os.Stderr.WriteString(appMark + desc + errorInsert + err.Error() + eol)
-	os.Exit(errorExitCode)
+func printDone(encBytes int) {
+	os.Stdout.WriteString(strconv.Itoa(encBytes) + " bytes encrypted" + eol)
 }
 
-func reportWrongUsage(desc string) {
-	os.Stderr.WriteString(appMark + desc + eol)
+func printError(desc string, err error) {
+	os.Stderr.WriteString(appMark + e.Wrap(desc, err).Error() + eol)
+}
+
+func printUsage(errMsg string) {
+	os.Stderr.WriteString(appMark + errMsg + eol)
 	os.Stderr.WriteString(usageInfo + eol)
-	os.Exit(errorExitCode)
 }
