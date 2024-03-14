@@ -12,6 +12,7 @@ import (
 
 const (
 	appName  = "xor"
+	verText  = "1.0.0"
 	helpText = `Usage to files:
   - xor ORIG_FILE ENCRYPT_KEY
 
@@ -22,6 +23,7 @@ Usage to stdin->stdout:
 Mandatory arguments to long options are mandatory for
 short options too.
   -h, --help     display this help and exit
+  -v, --version  output version information and exit
 
 The encryption key (ENCRYPT_KEY) may contain spaces.
 
@@ -33,6 +35,7 @@ used to encrypt it.`
 
 var (
 	isHelp      = false
+	isVersion   = false
 	isStdinData = false
 
 	filePath   string
@@ -45,6 +48,14 @@ func main() {
 
 	if isHelp {
 		help()
+
+		return
+	}
+
+	parseVerArgs()
+
+	if isVersion {
+		version()
 
 		return
 	}
@@ -103,4 +114,8 @@ func fatal(desc string, err error) {
 
 func help() {
 	fmt.Println(helpText)
+}
+
+func version() {
+	fmt.Printf("%s version %s\n", appName, verText)
 }

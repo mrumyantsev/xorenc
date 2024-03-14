@@ -15,6 +15,16 @@ func parseHelpArgs() {
 	}
 }
 
+func parseVerArgs() {
+	if len(os.Args) < 2 {
+		return
+	}
+
+	if (os.Args[1] == "-v") || (os.Args[1] == "--version") {
+		isVersion = true
+	}
+}
+
 func parseStdinArgs() {
 	if len(os.Args) < 2 {
 		fatal("missing encryption key operand", nil)
