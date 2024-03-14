@@ -5,6 +5,16 @@ import (
 	"strings"
 )
 
+func parseHelpArgs() {
+	if len(os.Args) < 2 {
+		return
+	}
+
+	if (os.Args[1] == "-h") || (os.Args[1] == "--help") {
+		isHelp = true
+	}
+}
+
 func parseStdinArgs() {
 	if len(os.Args) < 2 {
 		fatal("missing encryption key operand", nil)

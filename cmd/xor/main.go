@@ -19,6 +19,10 @@ Usage to stdin->stdout:
   - xor ENCRYPT_KEY < ORIG_FILE > OUTPUT_FILE
   - cat ORIG_FILE | xor ENCRYPT_KEY > OUTPUT_FILE
 
+Mandatory arguments to long options are mandatory for
+short options too.
+  -h, --help     display this help and exit
+
 The encryption key (ENCRYPT_KEY) may contain spaces.
 
 To decrypt data, use the same encryption key that was
@@ -28,6 +32,7 @@ used to encrypt it.`
 )
 
 var (
+	isHelp      = false
 	isStdinData = false
 
 	filePath   string
@@ -36,6 +41,14 @@ var (
 )
 
 func main() {
+	parseHelpArgs()
+
+	if isHelp {
+		help()
+
+		return
+	}
+
 	isStdinData = checkStdinData()
 	cpuCores = runtime.NumCPU()
 
