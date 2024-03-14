@@ -13,15 +13,17 @@ import (
 )
 
 const (
+	spc       = " "
+	eol       = "\n"
 	appMark   = "xor: "
-	usageInfo = "Usage:\n  - xor <filepath> <enckey>\n" +
-		"  - cat ./def_file | xor <enckey> > ./out_file\n" +
-		"  - xor <enckey> < ./def_file > ./out_file\n\n" +
-		"The encryption key (<enckey>) may contain spaces.\n\n" +
-		"The decryption is provided by repeating of encryption\n" +
-		"with the same key, that was used for encryption."
-	space = " "
-	eol   = "\n"
+	usageText = "Usage to files:" + eol +
+		"  - xor ORIG_FILE ENCRYPT_KEY" + eol + eol +
+		"Usage to stdin->stdout:" + eol +
+		"  - xor ENCRYPT_KEY < ORIG_FILE > OUTPUT_FILE" + eol +
+		"  - cat ORIG_FILE | xor ENCRYPT_KEY > OUTPUT_FILE" + eol + eol +
+		"The encryption key (ENCRYPT_KEY) may contain spaces." + eol + eol +
+		"To decrypt data, use the same encryption key that was" + eol +
+		"used to encrypt it."
 
 	errorExitCode = 1
 )
@@ -61,7 +63,7 @@ func encryptStdinData() {
 		os.Exit(errorExitCode)
 	}
 
-	encryptKey := []byte(strings.Join(cliArgs, space))
+	encryptKey := []byte(strings.Join(cliArgs, spc))
 
 	stdinData, err := io.ReadAll(os.Stdin)
 	if err != nil {
@@ -89,7 +91,7 @@ func encryptFile() {
 
 	filePath := cliArgs[0]
 
-	encryptKey := []byte(strings.Join(cliArgs[1:], space))
+	encryptKey := []byte(strings.Join(cliArgs[1:], spc))
 
 	encBytes, err := xor.EncryptFile(filePath, encryptKey, cpuCores)
 	if err != nil {
@@ -110,6 +112,6 @@ func printError(desc string, err error) {
 }
 
 func printUsage(errMsg string) {
-	os.Stderr.WriteString(appMark + errMsg + eol)
-	os.Stderr.WriteString(usageInfo + eol)
+	os.Stderr.WriteString(appMark + errMsg + eol + eol)
+	os.Stderr.WriteString(usageText + eol)
 }
