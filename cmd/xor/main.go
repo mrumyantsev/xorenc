@@ -20,8 +20,7 @@ Usage to stdin->stdout:
   - xor ENCRYPT_KEY < ORIG_FILE > OUTPUT_FILE
   - cat ORIG_FILE | xor ENCRYPT_KEY > OUTPUT_FILE
 
-Mandatory arguments to long options are mandatory for
-short options too.
+Options:
   -h, --help     display this help and exit
   -v, --version  output version information and exit
 
