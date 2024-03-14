@@ -2,7 +2,7 @@
 
 .PHONY: build
 build:
-	go build -o ./build/xor ./cmd/xor/main.go
+	go build -o ./build/xor ./cmd/xor
 
 .PHONY: test
 test:
