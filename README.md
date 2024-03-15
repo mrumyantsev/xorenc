@@ -46,7 +46,7 @@
 - `github.com/mrumyantsev/xor/pkg/lib/e`
 - `github.com/mrumyantsev/xor/pkg/fileops`
 
-# Требования
+# Технические требования
 
 ### Установленное ПО:
 
