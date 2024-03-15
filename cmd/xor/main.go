@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"runtime"
 
 	"github.com/mrumyantsev/xor/pkg/lib/e"
 	"github.com/mrumyantsev/xor/pkg/xor"
@@ -39,7 +38,6 @@ var (
 
 	filePath   string
 	encryptKey []byte
-	cpuCores   int
 )
 
 func main() {
@@ -60,7 +58,6 @@ func main() {
 	}
 
 	isStdinData = checkStdinData()
-	cpuCores = runtime.NumCPU()
 
 	if isStdinData {
 		parseStdinArgs()
@@ -88,7 +85,7 @@ func encryptStdinData() {
 		fatal("could not read data from stdin", err)
 	}
 
-	xor.Encrypt(stdinData, encryptKey, cpuCores)
+	xor.Encrypt(stdinData, encryptKey)
 
 	if _, err = os.Stdout.Write(stdinData); err != nil {
 		fatal("could not write encrypted data to stdout", err)
@@ -96,7 +93,7 @@ func encryptStdinData() {
 }
 
 func encryptFile() {
-	encBytes, err := xor.EncryptFile(filePath, encryptKey, cpuCores)
+	encBytes, err := xor.EncryptFile(filePath, encryptKey)
 	if err != nil {
 		fatal("could not encrypt file", err)
 	}
