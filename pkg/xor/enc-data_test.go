@@ -8,10 +8,12 @@ import (
 	"github.com/mrumyantsev/xor/pkg/xor"
 )
 
-const aplhaLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+const (
+	aplhaLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+)
 
 func TestEncrypt(t *testing.T) {
-	dataDefault := []byte(aplhaLetters)
+	dataOrig := []byte(aplhaLetters)
 
 	keysTestTable := []struct {
 		key []byte
@@ -35,20 +37,32 @@ func TestEncrypt(t *testing.T) {
 		{10_000, 100_000},
 	}
 
-	dataCopy := make([]byte, len(dataDefault))
+	dataCopy := make([]byte, len(dataOrig))
 
 	for _, keyEntry := range keysTestTable {
 		for _, wnEntry := range workersTestTable {
-			copy(dataCopy, dataDefault)
+			copy(dataCopy, dataOrig)
 
-			// encryption + decryption should bring default data
-			xor.Encrypt(dataCopy, keyEntry.key, wnEntry.encWNum)
-			xor.Encrypt(dataCopy, keyEntry.key, wnEntry.decWNum)
+			fmt.Println("orig:", dataOrig)
 
-			if !reflect.DeepEqual(dataCopy, dataDefault) {
-				fmt.Println("decryption fail: default data does not match data copy")
-				fmt.Println("def:", dataDefault)
-				fmt.Println("cpy:", dataCopy)
+			// Provide encryption and decryption that restores original
+			// data.
+
+			xor.SetNWorkers(wnEntry.encWNum)
+
+			xor.Encrypt(dataCopy, keyEntry.key)
+
+			fmt.Println("copy:", dataCopy)
+
+			xor.SetNWorkers(wnEntry.decWNum)
+
+			xor.Encrypt(dataCopy, keyEntry.key)
+
+			if !reflect.DeepEqual(dataCopy, dataOrig) {
+				fmt.Println("decryption fail: original data does not match data copy")
+				fmt.Println("orig:", dataOrig)
+				fmt.Println("copy:", dataCopy)
+
 				t.FailNow()
 			}
 		}
