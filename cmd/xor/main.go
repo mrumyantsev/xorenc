@@ -32,9 +32,8 @@ used to encrypt it.`
 )
 
 var (
-	isHelp      = false
-	isVersion   = false
-	isStdinData = false
+	isHelp    = false
+	isVersion = false
 
 	filePath   string
 	encryptKey []byte
@@ -57,9 +56,7 @@ func main() {
 		return
 	}
 
-	isStdinData = checkStdinData()
-
-	if isStdinData {
+	if isStdinData() {
 		parseStdinArgs()
 		encryptStdinData()
 
@@ -70,7 +67,7 @@ func main() {
 	encryptFile()
 }
 
-func checkStdinData() bool {
+func isStdinData() bool {
 	stdinFileInfo, err := os.Stdin.Stat()
 	if err != nil {
 		fatal("could not get stdin file info", err)
