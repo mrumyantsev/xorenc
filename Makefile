@@ -1,5 +1,5 @@
-.SILENT:
 .DEFAULT_GOAL := build
+.SILENT:
 
 .PHONY: build
 build:
@@ -8,3 +8,7 @@ build:
 .PHONY: test
 test:
 	go test -v ./...
+
+.PHONY: install
+install:
+	cp ./build/xor /usr/local/bin
